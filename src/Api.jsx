@@ -1,4 +1,4 @@
-export const GEO_API_URL = 'https://wft-geo-db.p.rapidapi.com/v1/geo/cities';
+export const GEO_API_URL = 'https://wft-geo-db.p.rapidapi.com/v1/geo';
 
 export const geoApiOptions = {
 	method: 'GET',
@@ -8,10 +8,5 @@ export const geoApiOptions = {
 	}
 };
 
-try {
-	const response = await fetch(url, geoApiOptions);
-	const result = await response.text();
-	console.log(result);
-} catch (error) {
-	console.error(error);
-}
+export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5';
+export const WEATHER_API_KEY = '0dd4fe6b35b936f986d6f952078ffe89'
