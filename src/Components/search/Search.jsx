@@ -1,9 +1,20 @@
 import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
-import { GEO_API_URL, geoApiOptions } from "../../Api.jsx"
+import { GEO_API_URL, geoApiOptions } from "../../Api.jsx";
 
 const Search = ({ onSearchChange }) => {
   const [search, setSearch] = useState(null);
+  const [text, setText] = useState("");
+
+  const getCompletion = async() => {
+    const response = await fetch('http://localhost:8000/', {
+      method: 'POST',
+      body: JSON.stringify({text: text}), 
+      headers: {'Content-Type': 'application/json'}
+  })
+  const data = await response.json()
+  console.log(data)
+  }
 
   const handleOnChange = (searchData) => {
     setSearch(searchData);
@@ -12,19 +23,16 @@ const Search = ({ onSearchChange }) => {
 
   const loadOptions = (inputValue) => {
     return fetch(
-      //filter out big cities & inputValue in the search change
-      `${GEO_API_URL}/cities?minPopulation=1000000&namePrefix=${inputValue}`,
+      `${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${inputValue}`,
       geoApiOptions
     )
       .then((response) => response.json())
       .then((response) => {
         //console.log(response)
         return {
-          //object
           options: response.data.map((city) => {
             return {
-              //array of objects
-              value: `${city.latitude} ${city.longitude}`, //the weather api needs lat&lon hence, needs to be store
+              value: `${city.latitude} ${city.longitude}`,
               label: `${city.name}, ${city.country}`,
             };
           }),
@@ -42,6 +50,7 @@ const Search = ({ onSearchChange }) => {
         onChange={handleOnChange}
         loadOptions={loadOptions}
       />
+      <p>{getCompletion()}</p>
     </div>
   );
 };

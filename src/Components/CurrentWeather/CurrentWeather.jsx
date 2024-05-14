@@ -1,5 +1,4 @@
 import "./CurrentWeather.css";
-// import sunny from "../../../public/32/Color=On.svg";
 
 const CurrentWeather = ({data}) => {
   return (

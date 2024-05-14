@@ -1,15 +1,15 @@
 import "./App.css";
-import CurrentWeather from "./Components/CurrentWeather/CurrentWeather.jsx";
-import Search from "./Components/search/Search.jsx";
 import { WEATHER_API_KEY, WEATHER_API_URL } from "./Api.jsx";
 import { useState } from "react";
 
+import CurrentWeather from "./Components/CurrentWeather/CurrentWeather.jsx";
+import Search from "./Components/search/Search.jsx";
+
 function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
-
+  
   const handleOnSearchChange = (searchData) => {
     const [lat, lon] = searchData.value.split(" ");
-
     const currentWeatherFetch = fetch(
       `${WEATHER_API_URL}/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`
     );
@@ -23,7 +23,6 @@ function App() {
         console.error(error);
       });
   };
-
   console.log(currentWeather);
 
   return (
