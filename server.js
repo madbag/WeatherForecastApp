@@ -26,7 +26,7 @@ app.post("/", async (req, res) => {
     });
 
     console.log(completion.choices[0]);
-    res.send(completion.choices[0]);
+    res.send(completion.choices[0].content);
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Internal Server Error" });

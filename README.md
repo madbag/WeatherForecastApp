@@ -19,7 +19,7 @@ Before running the application, ensure you have the following installed:
 - OpenAI API key
 - Weather API key
 - GeoDB Cities API key
-- 
+  
 ## Start the Server
 
 ```bash
