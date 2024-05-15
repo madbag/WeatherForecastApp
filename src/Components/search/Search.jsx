@@ -15,18 +15,19 @@ const Search = ({ onSearchChange }) => {
   };
 
   //get answer from Chat GPT
-  const getChatGPTAnswer = async (city) => {
+  const getChatGPTAnswer = async(text) => {
     try {
       const response = await fetch('http://localhost:8000/', {
         method: 'POST',
-        body: JSON.stringify({ text: city }), // Send selected city as text
+        body: JSON.stringify({ text }), // Send selected city as text
         headers: { 'Content-Type': 'application/json' }
       });
       if (!response.ok) {
         throw new Error('Failed to fetch ChatGPT answer');
       }
+      // console.log(response)
       const data = await response.json();
-      setChatGPTAnswer(data); // Set ChatGPT answer
+      setChatGPTAnswer(data.message.content); 
     } catch (error) {
       console.error('Error fetching ChatGPT answer:', error);
     }

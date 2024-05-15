@@ -17,14 +17,13 @@ app.post("/", async (req, res) => {
   const { text } = req.body; // Assuming weather data is sent along with text
   const messages = [
     { role: "system", content: "You are a helpful assistant." },
-    { role: "user", content: text },
+    { role: "user", content: `Today's weather forecast, clothes recommendation and food in hip hop language: ${text}` },
   ];
   try {
     const completion = await openai.chat.completions.create({
       messages,
       model: "gpt-3.5-turbo",
     });
-
     console.log(completion.choices[0]);
     res.send(completion.choices[0].content);
   } catch (error) {
