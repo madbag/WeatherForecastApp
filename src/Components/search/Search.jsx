@@ -2,7 +2,7 @@ import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
 import { GEO_API_URL, geoApiOptions } from "../../Api.jsx";
 
-const Search = ({ onSearchChange }) => { //prop
+const Search = ({ onSearchChange }) => { 
   const [search, setSearch] = useState(null);
   const [chatGPTAnswer, setChatGPTAnswer] = useState(null);
  
@@ -32,6 +32,9 @@ const Search = ({ onSearchChange }) => { //prop
         body: JSON.stringify({ text: city }), // Send selected city as text
         headers: { 'Content-Type': 'application/json' }
       });
+      if (!response.ok) {
+        throw new Error('Failed to fetch ChatGPT answer');
+      }
       const data = await response.json();
       setChatGPTAnswer(data); // Set ChatGPT answer
     } catch (error) {
