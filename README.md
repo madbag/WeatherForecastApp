@@ -22,6 +22,8 @@ Before running the application, ensure you have the following installed:
 - 
 ## Start the Server
 
+```bash
 npm run start:frontend
 npm run start:backend
+```
 
