@@ -1,8 +1,27 @@
 # WEATHER FORECAST
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Chatbot Weather Assistant
 
-Currently, two official plugins are available:
+This repository contains code for a simple chatbot weather assistant built using Express.js and the OpenAI API. The chatbot can provide weather updates for cities based on user input and generate responses using the GPT-3.5 model.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
+
+- Accepts user input and provides weather updates for cities.
+- Utilizes the OpenAI API to generate natural language responses.
+- Error handling for internal server errors.
+
+## Prerequisites
+
+Before running the application, ensure you have the following installed:
+
+- Node.js 
+- npm (Node.js package manager)
+- OpenAI API key
+- Weather API key
+- GeoDB Cities API key
+- 
+## Start the Server
+
+npm run start:frontend
+npm run start:backend
+
