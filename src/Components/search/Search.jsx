@@ -1,22 +1,12 @@
 import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
 import { GEO_API_URL, geoApiOptions } from "../../Api.jsx";
+import { text } from "express";
 
 const Search = ({ onSearchChange }) => { 
   const [search, setSearch] = useState(null);
   const [chatGPTAnswer, setChatGPTAnswer] = useState(null);
  
-//sends value of the text
-  const getCompletion = async() => {
-    const response = await fetch('http://localhost:8000/', {
-      method: 'POST',
-      body: JSON.stringify({text: text}), 
-      headers: {'Content-Type': 'application/json'}
-  })
-  const data = await response.json()
-  console.log(data)
-  }
-
   //updates the search state and provides with searchData
   const handleOnChange = (searchData) => {
     setSearch(searchData);
