@@ -5,11 +5,12 @@ import { GEO_API_URL, geoApiOptions } from "../../Api.jsx";
 const Search = ({ onSearchChange }) => {
   const [search, setSearch] = useState(null);
   const [text, setText] = useState("");
+  const [temperature, setTemperature] = useState(null);
 
   const getCompletion = async() => {
     const response = await fetch('http://localhost:8000/', {
       method: 'POST',
-      body: JSON.stringify({text: text}), 
+      body: JSON.stringify({text: text, weather: temperature}), 
       headers: {'Content-Type': 'application/json'}
   })
   const data = await response.json()
