@@ -1,6 +1,15 @@
 import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
-import { GEO_API_URL, geoApiOptions } from "../Api.jsx";
+// import { GEO_API_URL, geoApiOptions } from "./Api";
+
+const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
+const geoApiOptions = {
+  method: "GET",
+  headers: {
+    "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API,
+    "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
+  },
+};
 
 const customStyles = {
   control: (provided) => ({
@@ -52,12 +61,12 @@ const Search = ({ onSearchChange }) => {
   //fetches cities based on the user input
   const loadOptions = (inputValue) => {
     return fetch(
-      `${GEO_API_URL}/cities?minPopulation=100&namePrefix=${inputValue}`,
+      `${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${inputValue}`,
       geoApiOptions
     )
       .then((response) => response.json())
       .then((response) => {
-        // console.log(response)
+        console.log(response)
         return {
           options: response.data.map((city) => {
             return {
@@ -73,9 +82,9 @@ const Search = ({ onSearchChange }) => {
   return (
     <div>
       {/* a dropdown input field that asynchronously loads options based on the input  */}
-      <h1 className="heading">Weather Forecast</h1>
+      <h1 className="mt-2 text-3xl font-bold tracking-tight text-white-900 sm:text-4xl">Weather Forecast</h1>
       <AsyncPaginate
-        className="async-paginate"
+        className=""
         styles={customStyles}
         placeholder="Search for a city"
         debounceTimeout={600} //milliseconds
@@ -88,8 +97,9 @@ const Search = ({ onSearchChange }) => {
       />
 
       {chatGPTAnswer && (
-        <div>
-          <p>{chatGPTAnswer}</p>
+        <div className="">
+          <h4 className="">Weather Summary:</h4>
+          {chatGPTAnswer}
         </div>
       )}
     </div>
