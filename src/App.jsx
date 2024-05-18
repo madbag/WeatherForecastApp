@@ -30,12 +30,12 @@ function App() {
 
   return (
     <div className="h-screen bg-[#0d1829] flex justify-center items-center">
-      <div className="max-w-3xl p-7 bg-white rounded-lg shadow-lg ">
-        <div className="max-w-3xl mt-4">
+      <div className="w-7/12 flex flex-col justify-items-center items-center p-7 bg-white rounded-lg">
+        <div className="max-w-4xl mt-4">
           <Search onSearchChange={handleOnSearchChange} />
         </div>
 
-        <div className="">
+        <div>
           {currentWeather && <CurrentWeather data={currentWeather} />}
         </div>
 
@@ -45,6 +45,7 @@ function App() {
               href="https://github.com/madbag/WeatherForecastApp"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-700 font-medium"
             >
               💻 Open-source code{" "}
             </a>
@@ -53,6 +54,7 @@ function App() {
               href="https://www.linkedin.com/in/madhushreeb/"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-700 font-medium"
             >
               Madhushree 🙋🏻‍♀️
             </a>
