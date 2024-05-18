@@ -1,11 +1,31 @@
 import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
-import { GEO_API_URL, geoApiOptions } from "../../Api.jsx";
+import { GEO_API_URL, geoApiOptions } from "../Api.jsx";
 
-const Search = ({ onSearchChange }) => { 
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    backgroundColor: "white",
+    color: "black",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? "gray" : "white",
+    color: "black",
+    "&:hover": {
+      backgroundColor: "lightgray",
+    },
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: "black",
+  }),
+};
+
+const Search = ({ onSearchChange }) => {
   const [search, setSearch] = useState(null);
   const [chatGPTAnswer, setChatGPTAnswer] = useState(null);
- 
+
   //updates the search state and provides with searchData
   const handleOnChange = (searchData) => {
     setSearch(searchData);
@@ -14,25 +34,25 @@ const Search = ({ onSearchChange }) => {
   };
 
   //get answer from Chat GPT
-  const getChatGPTAnswer = async(text) => {
+  const getChatGPTAnswer = async (text) => {
     try {
-      const response = await fetch('http://localhost:8000/', {
-        method: 'POST',
-        body: JSON.stringify({text}), 
-        headers: { 'Content-Type': 'application/json' }
+      const response = await fetch("http://localhost:8000/", {
+        method: "POST",
+        body: JSON.stringify({ text }),
+        headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      console.log(data)
-      setChatGPTAnswer(data.message.content); 
+      // console.log(data)
+      setChatGPTAnswer(data.message.content);
     } catch (error) {
-      console.error('Error fetching ChatGPT answer:', error);
+      console.error("Error fetching ChatGPT answer:", error);
     }
   };
 
   //fetches cities based on the user input
   const loadOptions = (inputValue) => {
     return fetch(
-      `${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${inputValue}`,
+      `${GEO_API_URL}/cities?minPopulation=100&namePrefix=${inputValue}`,
       geoApiOptions
     )
       .then((response) => response.json())
@@ -52,8 +72,11 @@ const Search = ({ onSearchChange }) => {
 
   return (
     <div>
-{/* a dropdown input field that asynchronously loads options based on the input  */}
+      {/* a dropdown input field that asynchronously loads options based on the input  */}
+      <h1 className="heading">Weather Forecast</h1>
       <AsyncPaginate
+        className="async-paginate"
+        styles={customStyles}
         placeholder="Search for a city"
         debounceTimeout={600} //milliseconds
         value={search}
@@ -63,6 +86,7 @@ const Search = ({ onSearchChange }) => {
         }}
         loadOptions={loadOptions}
       />
+
       {chatGPTAnswer && (
         <div>
           <p>{chatGPTAnswer}</p>

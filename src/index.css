@@ -2,14 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+html {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
+  margin: 2em;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 }
 
+.container {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 2em 5em;
+  border-radius: 0.5em;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.1);
+  background-color: #333333;
+}
+
+.heading {
+  text-align: center;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 2em;
+}
 
