@@ -1,6 +1,5 @@
 import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
-// import { GEO_API_URL, geoApiOptions } from "./Api";
 
 const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
 const geoApiOptions = {
@@ -66,7 +65,7 @@ const Search = ({ onSearchChange }) => {
     )
       .then((response) => response.json())
       .then((response) => {
-        console.log(response)
+        console.log(response);
         return {
           options: response.data.map((city) => {
             return {
@@ -80,9 +79,12 @@ const Search = ({ onSearchChange }) => {
   };
 
   return (
-    <div>
+    <div className="">
       {/* a dropdown input field that asynchronously loads options based on the input  */}
-      <h1 className="mt-2 text-3xl font-bold tracking-tight text-white-900 sm:text-4xl">Weather Forecast</h1>
+      <h1 className="text-3xl font-bold text-black sm:text-4xl mb-6 text-center">
+        Weather Forecast
+      </h1>
+
       <AsyncPaginate
         className=""
         styles={customStyles}
@@ -97,9 +99,10 @@ const Search = ({ onSearchChange }) => {
       />
 
       {chatGPTAnswer && (
-        <div className="">
-          <h4 className="">Weather Summary:</h4>
-          {chatGPTAnswer}
+        <div className="mt-6 text-xl leading-8 text-gray-700">
+          <h4 className="text-2xl font-medium">Weather Vibes 🌈:</h4>
+          <p className="text-base">{chatGPTAnswer}</p>
+          <hr className="border-t border-gray-300 mt-4"></hr>
         </div>
       )}
     </div>

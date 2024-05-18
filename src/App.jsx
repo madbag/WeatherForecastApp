@@ -1,8 +1,8 @@
 // import { WEATHER_API_KEY, WEATHER_API_URL } from "./Api.jsx";
 import { useState } from "react";
 
-import CurrentWeather from "./CurrentWeather.jsx";
-import Search from "./Search.jsx";
+import CurrentWeather from "./Components/CurrentWeather.jsx";
+import Search from "./Components/Search.jsx";
 import "./index.css";
 
 const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5";
@@ -29,34 +29,35 @@ function App() {
   console.log(currentWeather);
 
   return (
-    <div className="">
+    <div className="h-screen bg-[#0d1829] flex justify-center items-center">
+      <div className="max-w-3xl p-7 bg-white rounded-lg shadow-lg ">
+        <div className="max-w-3xl mt-4">
+          <Search onSearchChange={handleOnSearchChange} />
+        </div>
 
-      <div className="">
-        <Search onSearchChange={handleOnSearchChange} />
-      </div>
+        <div className="">
+          {currentWeather && <CurrentWeather data={currentWeather} />}
+        </div>
 
-      <div className="">
-        {currentWeather && <CurrentWeather data={currentWeather} />}
-      </div>
-      
-      <div className="">
-        <p className="footer">
-          <a
-            href="https://github.com/madbag/WeatherForecastApp"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Open-source code{" "}
-          </a>
-          by{" "}
-          <a
-            href="https://www.linkedin.com/in/madhushreeb/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Madhushree B.
-          </a>
-        </p>
+        <div className="text-black mt-4">
+          <p className="text-center">
+            <a
+              href="https://github.com/madbag/WeatherForecastApp"
+              target="_blank"
+              rel="noreferrer"
+            >
+              💻 Open-source code{" "}
+            </a>
+            by{" "}
+            <a
+              href="https://www.linkedin.com/in/madhushreeb/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Madhushree 🙋🏻‍♀️
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
