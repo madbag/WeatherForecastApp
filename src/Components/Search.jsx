@@ -13,7 +13,6 @@ const geoApiOptions = {
 const customStyles = {
   control: (provided) => ({
     ...provided,
-    
     backgroundColor: "white",
     color: "black",
   }),
@@ -84,37 +83,34 @@ const Search = ({ onSearchChange }) => {
   };
 
   return (
-    <div className="max-w-6xl">
-      {/* a dropdown input field that asynchronously loads options based on the input  */}
-      <h1 className="text-3xl font-bold text-black sm:text-4xl mb-6 text-center">
-        Weather Forecast
-      </h1>
+    <div>
+      <div>
+        <AsyncPaginate
+          styles={customStyles}
+          placeholder="Search for a city"
+          debounceTimeout={600} //milliseconds
+          value={search}
+          onChange={(searchData) => {
+            handleOnChange(searchData);
+            getChatGPTAnswer(searchData.label); // Fetch ChatGPT answer when city is selected
+          }}
+          loadOptions={loadOptions}
+        />
 
-      <AsyncPaginate
-        styles={customStyles}
-        placeholder="Search for a city"
-        debounceTimeout={600} //milliseconds
-        value={search}
-        onChange={(searchData) => {
-          handleOnChange(searchData);
-          getChatGPTAnswer(searchData.label); // Fetch ChatGPT answer when city is selected
-        }}
-        loadOptions={loadOptions}
-      />
+        {!loading && chatGPTAnswer && (
+          <div className="mt-6 max-w-xl sm:text-xs text-black-700">
+            <h4 className="text-xl font-medium">Weather Vibes :</h4>
+            <p className="lg:text-base">{chatGPTAnswer}</p>
+            <hr className="border-t border-gray-300 mt-4"></hr>
+          </div>
+        )}
 
-      {!loading && chatGPTAnswer && (
-        <div className="mt-6 text-xl leading-8 text-black-700">
-          <h4 className="text-xl font-medium">Weather Vibes 🌈 :</h4>
-          <p className="text-base">{chatGPTAnswer}</p>
-          <hr className="border-t border-gray-300 mt-4"></hr>
-        </div>
-      )}
-
-      {loading && (
-        <div className="mt-6 text-xl leading-8 text-gray-700">
-          <p className="text-base font-medium">Weather Vibes Loading... ⏳</p>
-        </div>
-      )}
+        {loading && (
+          <div className="mt-6 text-xl leading-8 text-gray-700">
+            <p className="text-base font-medium">Weather Vibes Loading... ⏳</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
