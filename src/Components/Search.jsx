@@ -1,5 +1,6 @@
 import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
+import axios from "axios";
 
 const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
 const geoApiOptions = {
@@ -46,12 +47,10 @@ const Search = ({ onSearchChange }) => {
   //get answer from Chat GPT
   const getChatGPTAnswer = async (text) => {
     try {
-      const response = await fetch("http://localhost:8000/", {
-        method: "POST",
-        body: JSON.stringify({ text }),
+      const response = await axios.post("http://localhost:8000/", { text }, {
         headers: { "Content-Type": "application/json" },
       });
-      const data = await response.json();
+      const data = response.json();
       // console.log(data)
       setChatGPTAnswer(data.message.content);
     } catch (error) {
@@ -62,24 +61,19 @@ const Search = ({ onSearchChange }) => {
   };
 
   //fetches cities based on the user input
-  const loadOptions = (inputValue) => {
-    return fetch(
-      `${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${inputValue}`,
-      geoApiOptions
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        return {
-          options: response.data.map((city) => {
-            return {
-              value: `${city.latitude} ${city.longitude}`,
-              label: `${city.name}, ${city.country}`,
-            };
-          }),
-        };
-      }) //map this to get the format we need for ASYNCPAGINATE
-      .catch((err) => console.error(err));
+  const loadOptions = async (inputValue) => {
+    try {
+      const response = await axios.get(`${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${inputValue}`,
+      geoApiOptions)
+    return {
+      options: response.data.data.map((city) => ({
+        value: `${city.latitude} ${city.longitude}`,
+        label: `${city.name}, ${city.country}`,
+      })),
+    }
+  } catch (error) {
+    console.error("Error fetching cities:", error)
+  }  
   };
 
   return (

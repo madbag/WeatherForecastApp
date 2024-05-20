@@ -51,33 +51,33 @@ const CurrentWeather = ({ data }) => {
 
           <div className="parameter-row">
             <span className="parameter-label">Feels like: </span>
-            <span className="font-bold">
+            <span className="font-bold sm:text-sm">
               {Math.round(data.main.feels_like)}°C
             </span>
           </div>
 
           <div className="parameter-row">
             <span className="parameter-label">Max Temp: </span>
-            <span className="font-bold">
+            <span className="font-bold sm:text-sm">
               {Math.round(data.main.temp_max)}°C
             </span>
           </div>
 
           <div className="parameter-row">
             <span className="parameter-label">Min Temp: </span>
-            <span className="font-bold">
+            <span className="font-bold sm:text-sm">
               {Math.round(data.main.temp_min)}°C
             </span>
           </div>
 
           <div className="parameter-row">
             <span className="parameter-label">Wind: </span>
-            <span className="font-bold">{Math.round(data.wind.speed)} m/s</span>
+            <span className="font-bold sm:text-sm">{Math.round(data.wind.speed)} m/s</span>
           </div>
 
           <div className="parameter-row">
             <span className="parameter-label">Humidity: </span>
-            <span className="font-bold">
+            <span className="font-bold sm:text-sm">
               {Math.round(data.main.humidity)}%
             </span>
           </div>
