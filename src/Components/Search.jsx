@@ -50,7 +50,7 @@ const Search = ({ onSearchChange }) => {
       const response = await axios.post("http://localhost:8000/", { text }, {
         headers: { "Content-Type": "application/json" },
       });
-      const data = response.json();
+      const data = response.data;
       // console.log(data)
       setChatGPTAnswer(data.message.content);
     } catch (error) {
