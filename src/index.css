@@ -2,4 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.ai-container{
+    width: 500px;
+    margin: 0 auto;
+
+}
+
+@media (max-width: 768px) {
+    .ai-container {
+        width: 300px; /* Adjust the width for mobile screens */
+        margin: 0 auto;
+    }
+}
+
+
 

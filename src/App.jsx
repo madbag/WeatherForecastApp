@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import axios from "axios";
 import CurrentWeather from "./Components/CurrentWeather.jsx";
 import Search from "./Components/Search.jsx";
@@ -9,8 +9,6 @@ const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API;
 
 function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const audioRef = useRef(null);
 
   const handleOnSearchChange = useCallback((searchData) => {
     const [lat, lon] = searchData.value.split(" ");
@@ -33,15 +31,8 @@ function App() {
       });
   }, []); // Empty dependency array means this function is memoized once
 
-  const toggleMusic = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play().catch((error) => {
-        console.error("Error attempting to play audio:", error);
-      });
-    }
-    setIsPlaying(!isPlaying);
+  const handleTitleClick = () => {
+    window.location.reload();
   };
 
   return (
@@ -54,23 +45,17 @@ function App() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <audio ref={audioRef} src="/weather_app.mp3" loop></audio>
-
       <div className="flex flex-col justify-center items-center flex-grow p-3">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mt-3 text-center">
-            AI Weather Forecast
+            <a href="#" className="text-white" onClick={handleTitleClick}>
+              AI Weather Forecast
+            </a>
           </h1>
-          <button
-            className="text-white text-lg items-center"
-            onClick={toggleMusic}
-          >
-            {isPlaying ? " 🔇" : " 🔊"}
-          </button>
         </div>
 
-        <div className="flex justify-items-center items-center m-6 p-9 rounded-lg bg-white bg-opacity-20 backdrop-blur-lg">
-          <div className="max-w-xl w-full">
+        <div className="flex justify-items-center items-center m-6 p-4 rounded-lg bg-white bg-opacity-20 backdrop-blur-lg ">
+          <div className="ai-container">
             <Search onSearchChange={handleOnSearchChange} />
             {currentWeather && <CurrentWeather data={currentWeather} />}
           </div>

@@ -94,7 +94,7 @@ const Search = ({ onSearchChange }) => {
         {!loading && chatGPTAnswer && (
           <div className="mt-6 max-w-xl sm:text-xs text-black-700">
             <h4 className="text-xl font-medium">Weather Vibes :</h4>
-            <p className="lg:text-base">{chatGPTAnswer}</p>
+            <p className="text-base">{chatGPTAnswer}</p>
             <hr className="border-t border-gray-300 mt-4"></hr>
           </div>
         )}
