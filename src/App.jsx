@@ -67,18 +67,18 @@ function App() {
               href="https://github.com/madbag/WeatherForecastApp"
               target="_blank"
               rel="noreferrer"
-              className="text-white-700 font-medium "
+              className="text-white-700 font-medium italic"
             >
-              💻 Open-source code
+              A project
             </a>{" "}
             by{" "}
             <a
               href="https://www.linkedin.com/in/madhushreeb/"
               target="_blank"
               rel="noreferrer"
-              className="text-white-700 font-medium"
+              className="text-white-700 font-medium italic"
             >
-              Madhushree 🙋🏻‍♀️
+              Madhushree 
             </a>
           </p>
         </div>

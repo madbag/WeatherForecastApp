@@ -47,7 +47,7 @@ const Search = ({ onSearchChange }) => {
   //get answer from Chat GPT
   const getChatGPTAnswer = async (text) => {
     try {
-      const response = await axios.post("http://localhost:8000/", { text }, {
+      const response = await axios.post("https://ai-weather-forecast.onrender.com/", { text }, {
         headers: { "Content-Type": "application/json" },
       });
       const data = response.data;
@@ -92,9 +92,9 @@ const Search = ({ onSearchChange }) => {
         />
 
         {!loading && chatGPTAnswer && (
-          <div className="mt-6 max-w-xl sm:text-xs text-black-700">
-            <h4 className="text-xl font-medium">Weather Vibes :</h4>
-            <p className="text-base">{chatGPTAnswer}</p>
+          <div className="mt-6 max-w-xl sm:text-xs text-white-700">
+            <h4 className="text-xl font-medium text-black">Weather Vibes :</h4>
+            <p className="text-base text-black">{chatGPTAnswer}</p>
             <hr className="border-t border-gray-300 mt-4"></hr>
           </div>
         )}
