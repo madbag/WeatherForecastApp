@@ -35,6 +35,7 @@ const Search = ({ onSearchChange }) => {
   const [search, setSearch] = useState(null);
   const [chatGPTAnswer, setChatGPTAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   //updates the search state and provides with searchData
   const handleOnChange = (searchData) => {
@@ -46,15 +47,21 @@ const Search = ({ onSearchChange }) => {
 
   //get answer from Chat GPT
   const getChatGPTAnswer = async (text) => {
+    setError(null);
     try {
-      const response = await axios.post("https://ai-weather-forecast.onrender.com/", { text }, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        "https://ai-weather-forecast.onrender.com/",
+        { text },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       const data = response.data;
-      // console.log(data)
+      console.log(data);
       setChatGPTAnswer(data.message.content);
     } catch (error) {
       console.error("Error fetching ChatGPT answer:", error);
+      setError("Sorry, AI Weather Vibes is currently unavailable. 😓");
     } finally {
       setLoading(false);
     }
@@ -63,17 +70,19 @@ const Search = ({ onSearchChange }) => {
   //fetches cities based on the user input
   const loadOptions = async (inputValue) => {
     try {
-      const response = await axios.get(`${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${inputValue}`,
-      geoApiOptions)
-    return {
-      options: response.data.data.map((city) => ({
-        value: `${city.latitude} ${city.longitude}`,
-        label: `${city.name}, ${city.country}`,
-      })),
+      const response = await axios.get(
+        `${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${inputValue}`,
+        geoApiOptions
+      );
+      return {
+        options: response.data.data.map((city) => ({
+          value: `${city.latitude} ${city.longitude}`,
+          label: `${city.name}, ${city.country}`,
+        })),
+      };
+    } catch (error) {
+      console.error("Error fetching cities:", error);
     }
-  } catch (error) {
-    console.error("Error fetching cities:", error)
-  }  
   };
 
   return (
@@ -105,6 +114,12 @@ const Search = ({ onSearchChange }) => {
           </div>
         )}
       </div>
+
+      {error && (
+        <div className="mt-6 text-black-700 font-medium sm:text-sm">
+          <p>{error}</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const CurrentWeather = ({ data }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -11,6 +11,10 @@ const CurrentWeather = ({ data }) => {
     return () => clearInterval(intervalId);
   }, []);
 
+  if (!data || !data.main || !data.weather || !data.wind) {
+    return <div>Loading...</div>;
+  }
+  
   const currentDate = new Date();
   const options = {
     weekday: "long",
@@ -39,7 +43,7 @@ const CurrentWeather = ({ data }) => {
           </h4>{" "}
           <img
             alt="weather"
-            className="h-22 w-20"
+            className="h-24 w-20"
             src={`icons/${data.weather[0].icon}.png`}
           />
         </div>
