@@ -82,9 +82,6 @@ const Search = ({ onSearchChange }) => {
       };
     } catch (error) {
       console.error("Error fetching cities:", error);
-      return {
-        options:[],
-      }
     }
   };
 
