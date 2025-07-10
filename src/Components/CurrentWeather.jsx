@@ -1,20 +1,12 @@
-import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 const CurrentWeather = ({ data }) => {
-  const [currentTime, setCurrentTime] = useState(new Date());
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   if (!data || !data.main || !data.weather || !data.wind) {
     return <div>Loading...</div>;
   }
-  
+
   const currentDate = new Date();
   const options = {
     weekday: "long",
@@ -26,7 +18,7 @@ const CurrentWeather = ({ data }) => {
   const formattedDate = currentDate.toLocaleDateString(undefined, options);
 
   return (
-    <div className="flex flex-col grid-rows-1 grid-cols-2 gap-4 mt-4">
+    <div className="flex flex-col gap-4 mt-4">
       <h2 className="text-xl font-medium flex flex-col justify-start">
         {data.city}
         <span className="text-xs"> {formattedDate}</span>
@@ -45,6 +37,9 @@ const CurrentWeather = ({ data }) => {
             alt="weather"
             className="h-24 w-20"
             src={`icons/${data.weather[0].icon}.png`}
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
           />
         </div>
 
@@ -53,7 +48,7 @@ const CurrentWeather = ({ data }) => {
             <h5 className="font-bold">Details</h5>
           </div>
 
-          <div className="parameter-row">
+          <div className="flex justify-between mb-1">
             <span className="parameter-label">Feels like: </span>
             <span className="font-bold sm:text-sm">
               {Math.round(data.main.feels_like)}°C
@@ -76,7 +71,9 @@ const CurrentWeather = ({ data }) => {
 
           <div className="parameter-row">
             <span className="parameter-label">Wind: </span>
-            <span className="font-bold sm:text-sm">{Math.round(data.wind.speed)} m/s</span>
+            <span className="font-bold sm:text-sm">
+              {Math.round(data.wind.speed)} m/s
+            </span>
           </div>
 
           <div className="parameter-row">
@@ -90,5 +87,28 @@ const CurrentWeather = ({ data }) => {
     </div>
   );
 };
+
+CurrentWeather.propTypes = {
+  data: PropTypes.shape({
+    city: PropTypes.string.isRequired,
+    main: PropTypes.shape({
+      temp: PropTypes.number.isRequired,
+      feels_like: PropTypes.number.isRequired,
+      temp_min: PropTypes.number.isRequired,
+      temp_max: PropTypes.number.isRequired,
+      humidity: PropTypes.number.isRequired,
+    }).isRequired,
+    weather: PropTypes.arrayOf(
+      PropTypes.shape({
+        description: PropTypes.string.isRequired,
+        icon: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+    wind: PropTypes.shape({
+      speed: PropTypes.number.isRequired,
+    }).isRequired,
+  }).isRequired,
+};
+
 
 export default CurrentWeather;
