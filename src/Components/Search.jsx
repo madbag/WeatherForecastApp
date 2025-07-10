@@ -1,6 +1,8 @@
 import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
 import axios from "axios";
+import { useChatGPT } from "../hooks/useChatGPT";
+import PropTypes from  "prop-types";
 
 const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
 const geoApiOptions = {
@@ -31,43 +33,23 @@ const customStyles = {
   }),
 };
 
+
 const Search = ({ onSearchChange }) => {
   const [search, setSearch] = useState(null);
-  const [chatGPTAnswer, setChatGPTAnswer] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const {
+    chatGPTAnswer,
+    loading: chatGPTLoading,
+    error,
+    getChatGPTAnswer,
+  } = useChatGPT();
 
-  //updates the search state and provides with searchData
   const handleOnChange = (searchData) => {
     setSearch(searchData);
     onSearchChange(searchData);
-    setChatGPTAnswer(null);
-    setLoading(true);
+    getChatGPTAnswer(searchData)
   };
 
-  //get answer from Chat GPT
-  const getChatGPTAnswer = async (text) => {
-    setError(null);
-    try {
-      const response = await axios.post(
-        "https://ai-weather-forecast.onrender.com/",
-        { text },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      const data = response.data;
-      console.log(data);
-      setChatGPTAnswer(data.message.content);
-    } catch (error) {
-      console.error("Error fetching ChatGPT answer:", error);
-      setError("Sorry, AI Weather Vibes is currently unavailable. 😓");
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  //fetches cities based on the user input
   const loadOptions = async (inputValue) => {
     try {
       const response = await axios.get(
@@ -91,16 +73,13 @@ const Search = ({ onSearchChange }) => {
         <AsyncPaginate
           styles={customStyles}
           placeholder="Search for a city"
-          debounceTimeout={600} //milliseconds
+          debounceTimeout={400} 
           value={search}
-          onChange={(searchData) => {
-            handleOnChange(searchData);
-            getChatGPTAnswer(searchData.label); // Fetch ChatGPT answer when city is selected
-          }}
+          onChange={handleOnChange}
           loadOptions={loadOptions}
         />
 
-        {!loading && chatGPTAnswer && (
+        {!chatGPTLoading && chatGPTAnswer && (
           <div className="mt-6 max-w-xl sm:text-xs text-white-700">
             <h4 className="text-xl font-medium text-black">Weather Vibes :</h4>
             <p className="text-base text-black">{chatGPTAnswer}</p>
@@ -108,7 +87,7 @@ const Search = ({ onSearchChange }) => {
           </div>
         )}
 
-        {loading && (
+        {chatGPTLoading && (
           <div className="mt-6 text-xl leading-8 text-gray-700">
             <p className="text-base font-medium">Weather Vibes Loading... ⏳</p>
           </div>
@@ -123,5 +102,10 @@ const Search = ({ onSearchChange }) => {
     </div>
   );
 };
+
+Search.propTypes = {
+  onSearchChange: PropTypes.func.isRequired,
+};
+
 
 export default Search;
