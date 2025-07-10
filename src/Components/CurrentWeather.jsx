@@ -27,7 +27,7 @@ const CurrentWeather = ({ data }) => {
       <div className="gap-9 flex flex-row ">
         <div className="left">
           <h2 className="text-5xl font-bold">{Math.round(data.main.temp)}°C</h2>
-          <h4 className="mt-2">
+          <h4>
             {data.weather[0].description
               .split(" ")
               .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -35,7 +35,7 @@ const CurrentWeather = ({ data }) => {
           </h4>{" "}
           <img
             alt="weather"
-            className="h-24 w-20"
+            className="h-24 w-24"
             src={`icons/${data.weather[0].icon}.png`}
             onError={(e) => {
               e.target.style.display = "none";
@@ -48,36 +48,36 @@ const CurrentWeather = ({ data }) => {
             <h5 className="font-bold">Details</h5>
           </div>
 
-          <div className="flex justify-between mb-1">
-            <span className="parameter-label">Feels like: </span>
+          <div>
+            <span>Feels like: </span>
             <span className="font-bold sm:text-sm">
               {Math.round(data.main.feels_like)}°C
             </span>
           </div>
 
-          <div className="parameter-row">
-            <span className="parameter-label">Max Temp: </span>
+          <div>
+            <span>Max Temp: </span>
             <span className="font-bold sm:text-sm">
               {Math.round(data.main.temp_max)}°C
             </span>
           </div>
 
-          <div className="parameter-row">
-            <span className="parameter-label">Min Temp: </span>
+          <div>
+            <span>Min Temp: </span>
             <span className="font-bold sm:text-sm">
               {Math.round(data.main.temp_min)}°C
             </span>
           </div>
 
-          <div className="parameter-row">
-            <span className="parameter-label">Wind: </span>
+          <div>
+            <span>Wind: </span>
             <span className="font-bold sm:text-sm">
               {Math.round(data.wind.speed)} m/s
             </span>
           </div>
 
-          <div className="parameter-row">
-            <span className="parameter-label">Humidity: </span>
+          <div>
+            <span>Humidity: </span>
             <span className="font-bold sm:text-sm">
               {Math.round(data.main.humidity)}%
             </span>
