@@ -25,6 +25,7 @@ function App() {
       .then((response) => {
         const weatherResponse = response.data;
         setCurrentWeather({ city: searchData.label, ...weatherResponse });
+        // console.log(weatherResponse);
       })
       .catch((error) => {
         console.error(error);
