@@ -1,11 +1,18 @@
 import PropTypes from "prop-types";
 
-const CurrentWeather = ({ data }) => {
+export default function CurrentWeather ({ data }) {
 
-
-  if (!data || !data.main || !data.weather || !data.wind) {
+  if (
+    !data ||
+    !data.main ||
+    !data.weather ||
+    !Array.isArray(data.weather) ||
+    data.weather.length === 0 ||
+    !data.wind
+  ) {
     return <div>Loading...</div>;
   }
+  // console.log("currentWeather data:", data);
 
   const currentDate = new Date();
   const options = {
@@ -17,6 +24,7 @@ const CurrentWeather = ({ data }) => {
 
   const formattedDate = currentDate.toLocaleDateString(undefined, options);
 
+  console.log(data);
   return (
     <div className="flex flex-col gap-4 mt-4">
       <h2 className="text-xl font-medium flex flex-col justify-start">
@@ -27,19 +35,11 @@ const CurrentWeather = ({ data }) => {
       <div className="gap-9 flex flex-row ">
         <div className="left">
           <h2 className="text-5xl font-bold">{Math.round(data.main.temp)}°C</h2>
-          <h4>
-            {data.weather[0].description
-              .split(" ")
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(" ")}
-          </h4>{" "}
+          <h4 className="capitalize">{data.weather[0].description}</h4>{" "}
           <img
             alt="weather"
             className="h-24 w-24"
             src={`icons/${data.weather[0].icon}.png`}
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
           />
         </div>
 
@@ -86,7 +86,7 @@ const CurrentWeather = ({ data }) => {
       </div>
     </div>
   );
-};
+}
 
 CurrentWeather.propTypes = {
   data: PropTypes.shape({
@@ -109,6 +109,3 @@ CurrentWeather.propTypes = {
     }).isRequired,
   }).isRequired,
 };
-
-
-export default CurrentWeather;

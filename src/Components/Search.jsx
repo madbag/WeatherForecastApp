@@ -2,7 +2,7 @@ import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
 import axios from "axios";
 import { useChatGPT } from "../hooks/useChatGPT";
-import PropTypes from  "prop-types";
+import PropTypes from "prop-types";
 
 const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
 const geoApiOptions = {
@@ -33,8 +33,7 @@ const customStyles = {
   }),
 };
 
-
-const Search = ({ onSearchChange }) => {
+export default function Search({ onSearchChange }) {
   const [search, setSearch] = useState(null);
   const {
     chatGPTAnswer,
@@ -46,9 +45,8 @@ const Search = ({ onSearchChange }) => {
   const handleOnChange = (searchData) => {
     setSearch(searchData);
     onSearchChange(searchData);
-    getChatGPTAnswer(searchData)
+    getChatGPTAnswer(searchData);
   };
-
 
   const loadOptions = async (inputValue) => {
     try {
@@ -73,7 +71,7 @@ const Search = ({ onSearchChange }) => {
         <AsyncPaginate
           styles={customStyles}
           placeholder="Search for a city"
-          debounceTimeout={400} 
+          debounceTimeout={400}
           value={search}
           onChange={handleOnChange}
           loadOptions={loadOptions}
@@ -101,11 +99,8 @@ const Search = ({ onSearchChange }) => {
       )}
     </div>
   );
-};
+}
 
 Search.propTypes = {
   onSearchChange: PropTypes.func.isRequired,
 };
-
-
-export default Search;
