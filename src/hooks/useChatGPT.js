@@ -12,7 +12,7 @@ export const useChatGPT = () => {
 
     try {
       const response = await axios.post(
-        "https://ai-weather-forecast.onrender.com",
+        "https://ai-weather-forecast.onrender.com/",
         { text },
         { headers: { "Content-Type": "application/json" } }
       );
