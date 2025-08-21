@@ -57,8 +57,8 @@ const Search = ({ onSearchChange }) => {
         }
       );
       const data = response.data;
+      console.log(data);
       setChatGPTAnswer(data.message);
-      console.log(data.message);
     } catch (error) {
       console.error("Error fetching ChatGPT answer:", error);
       setError("Sorry, AI Weather Vibes is currently unavailable. 😓");
