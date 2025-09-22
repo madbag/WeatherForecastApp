@@ -1,6 +1,7 @@
 import { AsyncPaginate } from "react-select-async-paginate";
 import { useState } from "react";
 import axios from "axios";
+import PropTypes from "prop-types";
 
 const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
 const geoApiOptions = {
@@ -10,6 +11,7 @@ const geoApiOptions = {
     "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
   },
 };
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const customStyles = {
   control: (provided) => ({
@@ -50,7 +52,7 @@ const Search = ({ onSearchChange }) => {
     setError(null);
     try {
       const response = await axios.post(
-        "https://ai-weather-forecast.onrender.com/",
+        `${BACKEND_URL}`,
         { text },
         {
           headers: { "Content-Type": "application/json" },
@@ -123,5 +125,9 @@ const Search = ({ onSearchChange }) => {
     </div>
   );
 };
+Search.propTypes = {
+  onSearchChange: PropTypes.func.isRequired,
+};
 
 export default Search;
+

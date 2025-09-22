@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 
-export default function CurrentWeather ({ data }) {
-
+export default function CurrentWeather({ data }) {
   if (
     !data ||
     !data.main ||
@@ -12,7 +11,7 @@ export default function CurrentWeather ({ data }) {
   ) {
     return <div>Loading...</div>;
   }
-  // console.log("currentWeather data:", data);
+  console.log("currentWeather data:", data);
 
   const currentDate = new Date();
   const options = {

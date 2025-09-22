@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export const useChatGPT = () => {
+export const useChatGPT = (endpoint = "https://weatherappbe-ddvo.onrender.com") => {
   const [chatGPTAnswer, setChatGPTAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -12,13 +12,13 @@ export const useChatGPT = () => {
 
     try {
       const response = await axios.post(
-        "https://ai-weather-forecast.onrender.com/",
-        { text },
+        endpoint,
+        { city: text },
         { headers: { "Content-Type": "application/json" } }
       );
       setChatGPTAnswer(response.data.response);
     } catch (err) {
-      console.error("ChatGPT fetch error:", err);
+      console.error(err);
       setError(
         err.response?.data?.error ||
           "AI Weather Vibes is currently unavailable."
@@ -27,6 +27,6 @@ export const useChatGPT = () => {
       setLoading(false);
     }
   };
-
-  return { chatGPTAnswer, loading, error, getChatGPTAnswer };
+  const reset = () => setChatGPTAnswer(null);
+  return { chatGPTAnswer, loading, error, getChatGPTAnswer, reset };
 };
