@@ -14,7 +14,7 @@ Before running the application, ensure you have the following installed:
 
 - Node.js 
 - npm (Node.js package manager)
-- OpenAI API key
+- AI API key (from Hugging Face)
 - Weather API key
 - GeoDB Cities API key
   
