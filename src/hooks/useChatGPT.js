@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export const useChatGPT = (endpoint = "https://weatherappbe-ddvo.onrender.com") => {
+export const useChatGPT = (endpoint = "https://weatherappbe-1.onrender.com") => {
   const [chatGPTAnswer, setChatGPTAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
