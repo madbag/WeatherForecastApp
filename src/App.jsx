@@ -7,25 +7,64 @@ import "./index.css";
 const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5";
 const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API;
 
+// collapses the 3-hour interval /forecast entries into one entry per day,
+// preferring the midday (12:00) reading for the icon/description, and
+// skips today since CurrentWeather already covers it
+const buildDailyForecast = (list) => {
+  const days = {};
+
+  list.forEach((entry) => {
+    const date = entry.dt_txt.split(" ")[0];
+    const isMidday = entry.dt_txt.endsWith("12:00:00");
+
+    if (!days[date]) {
+      days[date] = {
+        date,
+        tempMin: entry.main.temp_min,
+        tempMax: entry.main.temp_max,
+        icon: entry.weather[0].icon,
+        description: entry.weather[0].description,
+      };
+    } else {
+      days[date].tempMin = Math.min(days[date].tempMin, entry.main.temp_min);
+      days[date].tempMax = Math.max(days[date].tempMax, entry.main.temp_max);
+    }
+
+    if (isMidday) {
+      days[date].icon = entry.weather[0].icon;
+      days[date].description = entry.weather[0].description;
+    }
+  });
+
+  const today = new Date().toISOString().split("T")[0];
+  return Object.values(days)
+    .filter((day) => day.date !== today)
+    .slice(0, 5);
+};
+
 function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
+  const [forecast, setForecast] = useState([]);
 
   const handleOnSearchChange = useCallback((searchData) => {
     const [lat, lon] = searchData.value.split(" ");
+    const params = { lat, lon, appid: WEATHER_API_KEY, units: "metric" };
 
     axios
-      .get(`${WEATHER_API_URL}/weather`, {
-        params: {
-          lat: lat,
-          lon: lon,
-          appid: WEATHER_API_KEY,
-          units: "metric",
-        },
-      })
+      .get(`${WEATHER_API_URL}/weather`, { params })
       .then((response) => {
         const weatherResponse = response.data;
         setCurrentWeather({ city: searchData.label, ...weatherResponse });
         // console.log(weatherResponse);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    axios
+      .get(`${WEATHER_API_URL}/forecast`, { params })
+      .then((response) => {
+        setForecast(buildDailyForecast(response.data.list));
       })
       .catch((error) => {
         console.error(error);
@@ -55,10 +94,12 @@ function App() {
           </h1>
         </div>
 
-        <div className="flex justify-items-center items-center m-6 p-4 rounded-lg bg-white bg-opacity-20 backdrop-blur-lg ">
+        <div className="flex justify-items-center items-center w-full max-w-[500px] px-3 m-3 p-3 sm:m-6 sm:p-4 rounded-lg bg-white bg-opacity-20 backdrop-blur-lg ">
           <div className="ai-container">
             <Search onSearchChange={handleOnSearchChange} />
-            {currentWeather && <CurrentWeather data={currentWeather} />}
+            {currentWeather && (
+              <CurrentWeather data={currentWeather} forecast={forecast} />
+            )}
           </div>
         </div>
 

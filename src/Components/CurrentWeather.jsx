@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
+import Forecast from "./Forecast.jsx";
 
-export default function CurrentWeather({ data }) {
+export default function CurrentWeather({ data, forecast }) {
   if (
     !data ||
     !data.main ||
@@ -26,61 +27,69 @@ export default function CurrentWeather({ data }) {
   console.log(data);
   return (
     <div className="flex flex-col gap-4 mt-4">
-      <h2 className="text-xl font-medium flex flex-col justify-start">
+      <h2 className="text-xl font-medium flex flex-col justify-start items-center text-center sm:items-start sm:text-left">
         {data.city}
         <span className="text-xs"> {formattedDate}</span>
       </h2>
 
-      <div className="gap-9 flex flex-row ">
+      <div className="gap-4 sm:gap-9 flex flex-col items-center text-center sm:items-start sm:text-left sm:flex-row">
         <div className="left">
-          <h2 className="text-5xl font-bold">{Math.round(data.main.temp)}°C</h2>
-          <h4 className="capitalize">{data.weather[0].description}</h4>{" "}
+          <h2 className="text-4xl sm:text-5xl font-bold">
+            {Math.round(data.main.temp)}°C
+          </h2>
+          <h4 className="capitalize text-sm">{data.weather[0].description}</h4>
           <img
             alt="weather"
-            className="h-24 w-24"
+            className="h-16 w-16 sm:h-24 sm:w-24"
             src={`icons/${data.weather[0].icon}.png`}
           />
         </div>
 
-        <div className="right">
-          <div className="mt-1">
-            <h5 className="font-bold">Details</h5>
+        <div className="flex flex-row gap-6 text-left sm:contents">
+          <div className="right text-sm">
+            <div className="mt-1">
+              <h5 className="font-bold">Details</h5>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <div>
+                <span>Feels like: </span>
+                <span className="font-bold">
+                  {Math.round(data.main.feels_like)}°C
+                </span>
+              </div>
+
+              <div>
+                <span>Max Temp: </span>
+                <span className="font-bold">
+                  {Math.round(data.main.temp_max)}°C
+                </span>
+              </div>
+
+              <div>
+                <span>Min Temp: </span>
+                <span className="font-bold">
+                  {Math.round(data.main.temp_min)}°C
+                </span>
+              </div>
+
+              <div>
+                <span>Wind: </span>
+                <span className="font-bold">
+                  {Math.round(data.wind.speed)} m/s
+                </span>
+              </div>
+
+              <div>
+                <span>Humidity: </span>
+                <span className="font-bold">
+                  {Math.round(data.main.humidity)}%
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <span>Feels like: </span>
-            <span className="font-bold sm:text-sm">
-              {Math.round(data.main.feels_like)}°C
-            </span>
-          </div>
-
-          <div>
-            <span>Max Temp: </span>
-            <span className="font-bold sm:text-sm">
-              {Math.round(data.main.temp_max)}°C
-            </span>
-          </div>
-
-          <div>
-            <span>Min Temp: </span>
-            <span className="font-bold sm:text-sm">
-              {Math.round(data.main.temp_min)}°C
-            </span>
-          </div>
-
-          <div>
-            <span>Wind: </span>
-            <span className="font-bold sm:text-sm">
-              {Math.round(data.wind.speed)} m/s
-            </span>
-          </div>
-
-          <div>
-            <span>Humidity: </span>
-            <span className="font-bold sm:text-sm">
-              {Math.round(data.main.humidity)}%
-            </span>
-          </div>
+          <Forecast data={forecast} />
         </div>
       </div>
     </div>
@@ -88,6 +97,15 @@ export default function CurrentWeather({ data }) {
 }
 
 CurrentWeather.propTypes = {
+  forecast: PropTypes.arrayOf(
+    PropTypes.shape({
+      date: PropTypes.string.isRequired,
+      icon: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      tempMin: PropTypes.number.isRequired,
+      tempMax: PropTypes.number.isRequired,
+    })
+  ),
   data: PropTypes.shape({
     city: PropTypes.string.isRequired,
     main: PropTypes.shape({

@@ -1,89 +1,93 @@
 import { AsyncPaginate } from "react-select-async-paginate";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
+import { searchCities } from "../api/geoApi";
+import { getWeatherVibes } from "../api/weatherVibes";
+import { customStyles } from "./Search.styles";
 
-const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
-const geoApiOptions = {
-  method: "GET",
-  headers: {
-    "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API,
-    "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
-  },
-};
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const STORAGE_KEY = "weatherApp:selectedCity";
 
-const customStyles = {
-  control: (provided) => ({
-    ...provided,
-    backgroundColor: "white",
-    color: "black",
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected ? "gray" : "white",
-    color: "black",
-    "&:hover": {
-      backgroundColor: "lightgray",
-    },
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: "black",
-  }),
+const readStoredCity = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
 };
 
 const Search = ({ onSearchChange }) => {
-  const [search, setSearch] = useState(null);
+  const [search, setSearch] = useState(readStoredCity);
   const [chatGPTAnswer, setChatGPTAnswer] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const cancelTokenRef = useRef(null);
 
   //updates the search state and provides with searchData
   const handleOnChange = (searchData) => {
     setSearch(searchData);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(searchData));
     onSearchChange(searchData);
     setChatGPTAnswer(null);
     setLoading(true);
   };
 
+  //on a page reload, restore whichever city was last selected instead of
+  //starting from a blank search and no weather
+  useEffect(() => {
+    if (search) {
+      onSearchChange(search);
+      fetchWeatherVibes(search.label);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //clears the selected city from the box as soon as the user starts typing
+  //again, so the previous city doesn't linger while searching for a new one
+  const handleInputChange = (_inputValue, { action }) => {
+    if (action === "input-change" && search) {
+      setSearch(null);
+    }
+  };
+
+  //clears the selected city as soon as the box is focused, so clicking in
+  //hides the previous city right away instead of waiting for a keystroke
+  const handleFocus = () => {
+    if (search) {
+      setSearch(null);
+    }
+  };
+
   //get answer from Chat GPT
-  const getChatGPTAnswer = async (text) => {
+  const fetchWeatherVibes = async (text) => {
     setError(null);
     try {
-      const response = await axios.post(
-        `${BACKEND_URL}`,
-        { text },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      const data = response.data;
-      console.log(data);
-      setChatGPTAnswer(data.message);
-    } catch (error) {
-      console.error("Error fetching ChatGPT answer:", error);
+      const message = await getWeatherVibes(text);
+      setChatGPTAnswer(message);
+    } catch (err) {
+      console.error("Error fetching ChatGPT answer:", err);
       setError("Sorry, AI Weather Vibes is currently unavailable. 😓");
     } finally {
       setLoading(false);
     }
   };
 
-  //fetches cities based on the user input
+  //fetches cities based on the user input; cancels any request still
+  //in flight from a previous keystroke so stale results can't race in late
   const loadOptions = async (inputValue) => {
+    cancelTokenRef.current?.cancel();
+    const source = axios.CancelToken.source();
+    cancelTokenRef.current = source;
+
     try {
-      const response = await axios.get(
-        `${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${inputValue}`,
-        geoApiOptions
-      );
-      return {
-        options: response.data.data.map((city) => ({
-          value: `${city.latitude} ${city.longitude}`,
-          label: `${city.name}, ${city.country}`,
-        })),
-      };
-    } catch (error) {
-      console.error("Error fetching cities:", error);
+      const options = await searchCities(inputValue, source.token);
+      return { options };
+    } catch (err) {
+      if (!axios.isCancel(err)) {
+        console.error("Error fetching cities:", err);
+      }
+      return { options: [] };
     }
   };
 
@@ -94,11 +98,14 @@ const Search = ({ onSearchChange }) => {
           styles={customStyles}
           placeholder="Search for a city"
           debounceTimeout={600} //milliseconds
+          cacheOptions
           value={search}
           onChange={(searchData) => {
             handleOnChange(searchData);
-            getChatGPTAnswer(searchData.label); // Fetch ChatGPT answer when city is selected
+            fetchWeatherVibes(searchData.label); // Fetch ChatGPT answer when city is selected
           }}
+          onInputChange={handleInputChange}
+          onFocus={handleFocus}
           loadOptions={loadOptions}
         />
 
@@ -130,4 +137,3 @@ Search.propTypes = {
 };
 
 export default Search;
-
